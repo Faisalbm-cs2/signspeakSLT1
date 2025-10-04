@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Language Translator</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-dir="ltr">
+    <!-- Login/Entry Screen -->
+    <div id="loginScreen" class="screen active">
+        <div class="container">
+            <div class="login-container">
+                <div class="login-form">
+                    <h1>Sign Language Translator</h1>
+                    <p class="subtitle">Enter your name to get started, or continue as a guest</p>
+                    
+                    <form id="loginForm" role="form" aria-label="User entry form">
+                        <div class="form-group">
+                            <label for="loginNameInput" class="form-label">Your Name (Optional)</label>
+                            <input 
+                                type="text" 
+                                id="loginNameInput" 
+                                class="form-input" 
+                                placeholder="Enter your name..." 
+                                maxlength="50"
+                                aria-describedby="nameHelp"
+                            />
+                            <div id="nameHelp" class="sr-only">Enter your name to personalize your experience</div>
+                        </div>
+                        
+                        <button 
+                            type="submit" 
+                            id="loginContinueByNameBtn" 
+                            class="btn btn-primary btn-full"
+                            aria-label="Continue with entered name"
+                        >
+                            Continue with Name
+                        </button>
+                        
+                        <button 
+                            type="button" 
+                            id="loginContinueAsGuestBtn" 
+                            class="btn btn-secondary btn-full"
+                            aria-label="Continue as guest user"
+                        >
+                            Continue as Guest
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Translation Hub Screen -->
+    <div id="hubScreen" class="screen">
+        <div class="container">
+            <!-- Header -->
+            <header class="hub-header" role="banner">
+                <h1>
+                    Sign Language Translator
+                    <span id="directionIndicator" class="direction-indicator">LTR</span>
+                </h1>
+                <p class="subtitle">
+                    Welcome, <span id="welcomeName">User</span>! Select your language and translation mode.
+                </p>
+            </header>
+
+            <main role="main">
+                <!-- Language Selection -->
+                <section aria-label="Language selection" class="card-grid language-grid">
+                    <div 
+                        id="langArabicCard" 
+                        class="card focus-trap" 
+                        role="radio" 
+                        aria-checked="false"
+                        aria-label="Arabic language selection"
+                        tabindex="0"
+                    >
+                        <div class="card-icon" aria-hidden="true">العربية</div>
+                        <h3 class="card-title">Arabic</h3>
+                        <p class="card-description">Right-to-left text direction</p>
+                    </div>
+                    
+                    <div 
+                        id="langEnglishCard" 
+                        class="card focus-trap is-active" 
+                        role="radio" 
+                        aria-checked="true"
+                        aria-label="English language selection"
+                        tabindex="0"
+                    >
+                        <div class="card-icon" aria-hidden="true">English</div>
+                        <h3 class="card-title">English (US)</h3>
+                        <p class="card-description">Left-to-right text direction</p>
+                    </div>
+                    
+                    <div 
+                        id="langUrduCard" 
+                        class="card focus-trap" 
+                        role="radio" 
+                        aria-checked="false"
+                        aria-label="Urdu language selection"
+                        tabindex="0"
+                    >
+                        <div class="card-icon" aria-hidden="true">اردو</div>
+                        <h3 class="card-title">Urdu</h3>
+                        <p class="card-description">Right-to-left text direction</p>
+                    </div>
+                </section>
+
+                <!-- Mode Selection -->
+                <section aria-label="Translation mode selection" class="card-grid mode-grid">
+                    <div 
+                        id="modeTextToAnimCard" 
+                        class="card focus-trap is-active" 
+                        role="radio" 
+                        aria-checked="true"
+                        aria-label="Text to sign animation mode"
+                        tabindex="0"
+                    >
+                        <div class="card-icon" aria-hidden="true">TEXT → ANIM</div>
+                        <h3 class="card-title">Text → Sign Animation</h3>
+                        <p class="card-description">Type text to see sign language animation</p>
+                    </div>
+                    
+                    <div 
+                        id="modeSignToTextCard" 
+                        class="card focus-trap" 
+                        role="radio" 
+                        aria-checked="false"
+                        aria-label="Sign to text mode"
+                        tabindex="0"
+                    >
+                        <div class="card-icon" aria-hidden="true">SIGN → TEXT</div>
+                        <h3 class="card-title">Sign (Camera) → Text</h3>
+                        <p class="card-description">Use camera to translate sign language to text</p>
+                    </div>
+                </section>
+
+                <!-- Translation Panels -->
+                <section aria-label="Translation workspace" class="panels-container">
+                    <!-- Camera Panel -->
+                    <div id="cameraPanel" class="panel disabled">
+                        <div class="panel-header">
+                            <h3 class="panel-title">Camera Feed</h3>
+                            <div class="panel-controls">
+                                <button id="cameraStartBtn" class="btn btn-primary btn-sm" aria-label="Start camera">
+                                    Start
+                                </button>
+                                <button id="cameraStopBtn" class="btn btn-secondary btn-sm" aria-label="Stop camera" disabled>
+                                    Stop
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="camera-viewport">
+                            <video 
+                                id="cameraVideo" 
+                                class="camera-video" 
+                                autoplay 
+                                muted 
+                                playsinline
+                                aria-label="Live camera feed for sign language recognition"
+                            ></video>
+                            <div class="camera-placeholder">
+                                <div>Camera Preview</div>
+                            </div>
+                            <div id="cameraPlaceholderNote" class="placeholder-note">
+                                Live camera — backend recognition TBD
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Animation Panel -->
+                    <div id="animationPanel" class="panel">
+                        <div class="panel-header">
+                            <h3 class="panel-title">Sign Animation</h3>
+                            <div class="panel-controls">
+                                <button id="animPlayBtn" class="btn btn-primary btn-sm" aria-label="Play animation">
+                                    Play
+                                </button>
+                                <button id="animPauseBtn" class="btn btn-secondary btn-sm" aria-label="Pause animation" disabled>
+                                    Pause
+                                </button>
+                                <button id="animResetBtn" class="btn btn-secondary btn-sm" aria-label="Reset animation">
+                                    Reset
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="animationViewport" class="animation-viewport">
+                            <div class="animation-demo paused" aria-hidden="true"></div>
+                            <div id="animationPlaceholderNote" class="placeholder-note">
+                                Animation preview — TBD
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Text Panel -->
+                    <div id="textPanel" class="panel">
+                        <div class="panel-header">
+                            <h3 class="panel-title">Text Content</h3>
+                            <span id="textStatus" class="status-badge status-active">Input</span>
+                        </div>
+                        
+                        <textarea 
+                            id="textArea" 
+                            class="text-area" 
+                            placeholder="Type your text here to see sign language animation..."
+                            aria-label="Text input for sign language translation"
+                        ></textarea>
+                        
+                        <div class="text-controls">
+                            <label class="checkbox-group">
+                                <input type="checkbox" id="ttsToggle" class="checkbox" aria-describedby="ttsHelp">
+                                <span class="checkbox-label">Speak text (TTS)</span>
+                            </label>
+                            <div id="ttsHelp" class="sr-only">Enable text-to-speech for the entered text</div>
+                            
+                            <button 
+                                id="speakBtn" 
+                                class="btn btn-secondary btn-sm" 
+                                disabled
+                                aria-label="Speak the current text"
+                            >
+                                Speak
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
